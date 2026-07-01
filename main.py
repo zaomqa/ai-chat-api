@@ -43,3 +43,27 @@ def read_add(num1 : int, num2: int):
         "num2": num2,
         "sum": num1 + num2
     }
+
+@app.get("/search")
+def read_search(name: str):
+    return {
+        "result" : f"Searching for {name}" 
+    }
+
+@app.get("/multiply")
+def read_multiply(a: int, b: int):
+    return {
+        "result": a * b
+    }
+
+@app.get("/profile")
+def read_profile(name: str, age: int | None = None):
+    if age:
+        return {
+            "name": name,
+            "age": age
+        }
+    return {
+        "name": name,
+        "age": "Age not provided"
+    }
