@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -44,6 +45,8 @@ def read_add(num1 : int, num2: int):
         "sum": num1 + num2
     }
 
+##query parameters
+
 @app.get("/search")
 def read_search(name: str):
     return {
@@ -58,7 +61,7 @@ def read_multiply(a: int, b: int):
 
 @app.get("/profile")
 def read_profile(name: str, age: int | None = None):
-    if age:
+    if age is not None:
         return {
             "name": name,
             "age": age
@@ -66,4 +69,46 @@ def read_profile(name: str, age: int | None = None):
     return {
         "name": name,
         "age": "Age not provided"
+    }
+
+##post request
+
+class Message(BaseModel):
+    message: str
+
+
+@app.post("/echo")
+def create_message(msg: Message):
+    return {
+        "message": msg.message
+    }
+
+class Person(BaseModel):
+    name: str
+    age: int
+    
+@app.post("/person")
+def create_person(person: Person):
+    return {
+        "message" : f"Hello {person.name}, you are {person.age} years old."
+    }
+
+class Numbers(BaseModel):
+    num1: int
+    num2: int
+
+@app.post("/multiply")
+def create_multiply(numbers: Numbers):
+    return {
+        "result": numbers.num1 * numbers.num2
+    }
+
+class Rectangle(BaseModel):
+    length: float
+    width: float
+
+@app.post("/rectangle/area")
+def calculate_rectangle_area(rectangle: Rectangle):
+    return {
+        "area": rectangle.length * rectangle.width
     }
