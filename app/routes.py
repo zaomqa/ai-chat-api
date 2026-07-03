@@ -1,7 +1,9 @@
+#routes.py
 from fastapi import FastAPI
-from pydantic import BaseModel
+from models import Rectangle, Numbers, Person, Message
 
 app = FastAPI()
+
 
 @app.get("/")
 def read_root():
@@ -73,8 +75,7 @@ def read_profile(name: str, age: int | None = None):
 
 ##post request
 
-class Message(BaseModel):
-    message: str
+
 
 
 @app.post("/echo")
@@ -83,19 +84,14 @@ def create_message(msg: Message):
         "message": msg.message
     }
 
-class Person(BaseModel):
-    name: str
-    age: int
-    
+
 @app.post("/person")
 def create_person(person: Person):
     return {
         "message" : f"Hello {person.name}, you are {person.age} years old."
     }
 
-class Numbers(BaseModel):
-    num1: int
-    num2: int
+
 
 @app.post("/multiply")
 def create_multiply(numbers: Numbers):
@@ -103,9 +99,7 @@ def create_multiply(numbers: Numbers):
         "result": numbers.num1 * numbers.num2
     }
 
-class Rectangle(BaseModel):
-    length: float
-    width: float
+
 
 @app.post("/rectangle/area")
 def calculate_rectangle_area(rectangle: Rectangle):
