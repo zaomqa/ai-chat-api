@@ -1,45 +1,46 @@
 #routes.py
-from fastapi import FastAPI
+from fastapi import APIRouter
 from models import Rectangle, Numbers, Person, Message
+from restaurant_data import restaurant_info
 
-app = FastAPI()
 
+router = APIRouter()
 
-@app.get("/")
+@router.get("/")
 def read_root():
     return {"project": "AI Chat API", "author": "Zaid"}
 
-@app.get("/status")
+@router.get("/status")
 def read_status():
     return {"status": "running"}
 
-@app.get("/about")
+@router.get("/about")
 def read_about():
     return {
     "name": "AI Chat API",
     "version": "1.0"
 }
 
-@app.get("/greet")
+@router.get("/greet")
 def read_greet():
     return {
     "message": "Welcome to my API!"
 }
 
-@app.get("/greet/{name}")
+@router.get("/greet/{name}")
 def read_greet_name(name: str):
     return {
     "message": f"Hello, {name}"
     }
 
-@app.get("/square/{number}")
+@router.get("/square/{number}")
 def read_square(number: int):
     return {
         "number": number,
         "square": number ** 2
     }
 
-@app.get("/add/{num1}/{num2}")
+@router.get("/add/{num1}/{num2}")
 def read_add(num1 : int, num2: int):
     return {
         "num1": num1,
@@ -49,19 +50,19 @@ def read_add(num1 : int, num2: int):
 
 ##query parameters
 
-@app.get("/search")
+@router.get("/search")
 def read_search(name: str):
     return {
         "result" : f"Searching for {name}" 
     }
 
-@app.get("/multiply")
+@router.get("/multiply")
 def read_multiply(a: int, b: int):
     return {
         "result": a * b
     }
 
-@app.get("/profile")
+@router.get("/profile")
 def read_profile(name: str, age: int | None = None):
     if age is not None:
         return {
@@ -78,14 +79,14 @@ def read_profile(name: str, age: int | None = None):
 
 
 
-@app.post("/echo")
+@router.post("/echo")
 def create_message(msg: Message):
     return {
         "message": msg.message
     }
 
 
-@app.post("/person")
+@router.post("/person")
 def create_person(person: Person):
     return {
         "message" : f"Hello {person.name}, you are {person.age} years old."
@@ -93,7 +94,7 @@ def create_person(person: Person):
 
 
 
-@app.post("/multiply")
+@router.post("/multiply")
 def create_multiply(numbers: Numbers):
     return {
         "result": numbers.num1 * numbers.num2
@@ -101,8 +102,45 @@ def create_multiply(numbers: Numbers):
 
 
 
-@app.post("/rectangle/area")
+@router.post("/rectangle/area")
 def calculate_rectangle_area(rectangle: Rectangle):
     return {
         "area": rectangle.length * rectangle.width
     }
+
+
+### restaurant ###
+
+@router.get("/restaurant")
+def read_restaurant():
+        return restaurant_info
+
+
+@router.get("/menu")
+def read_menu(item : str | None = None):
+    if item is not None:
+        price = restaurant_info["menu"].get(item)
+        if price is not None:
+            return {
+                "item": item,
+                "price": price
+            }
+        else:
+            return {
+                "error": "404 Not Found",
+                "message": f"Item '{item}' not found in the menu."
+            }
+    return restaurant_info["menu"]
+
+@router.get("/hours")
+def read_hours():
+    return {
+        "hours": restaurant_info["hours"]
+    }
+
+@router.get("/location")
+def read_location():
+    return {
+        "location": restaurant_info["location"]
+    }
+       
