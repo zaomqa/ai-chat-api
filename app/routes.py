@@ -2,6 +2,7 @@
 from fastapi import APIRouter
 from models import Rectangle, Numbers, Person, Message
 from restaurant_data import restaurant_info
+import services.restaurant_service as restaurant_service
 
 
 router = APIRouter()
@@ -112,35 +113,32 @@ def calculate_rectangle_area(rectangle: Rectangle):
 ### restaurant ###
 
 @router.get("/restaurant")
-def read_restaurant():
-        return restaurant_info
+def read_restaurant_info():
+    return restaurant_service.get_restaurant()    
 
 
 @router.get("/menu")
-def read_menu(item : str | None = None):
-    if item is not None:
-        price = restaurant_info["menu"].get(item)
-        if price is not None:
-            return {
-                "item": item,
-                "price": price
-            }
-        else:
-            return {
-                "error": "404 Not Found",
-                "message": f"Item '{item}' not found in the menu."
-            }
-    return restaurant_info["menu"]
+def read_menu_item(item: str | None = None):
+    return restaurant_service.get_menu(item)
+
 
 @router.get("/hours")
-def read_hours():
-    return {
-        "hours": restaurant_info["hours"]
-    }
+def read_restaurant_hours():
+    return restaurant_service.get_hours()   
+
 
 @router.get("/location")
-def read_location():
-    return {
-        "location": restaurant_info["location"]
-    }
-       
+def read_restaurant_location():
+    return restaurant_service.get_location()
+
+@router.get("/search_menu")
+def search_menu_item(item: str):
+    return restaurant_service.get_menu(item)
+
+@router.get("/phone")
+def read_restaurant_phone():
+    return restaurant_service.get_phone()
+
+@router.get("/ask")
+def answer_question(question: str):
+    return restaurant_service.answer_question(question)
