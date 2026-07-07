@@ -1,7 +1,6 @@
 #routes.py
 from fastapi import APIRouter
 from models import Rectangle, Numbers, Person, Message
-from restaurant_data import restaurant_info
 import services.restaurant_service as restaurant_service
 
 
@@ -142,3 +141,7 @@ def read_restaurant_phone():
 @router.get("/ask")
 def answer_question(question: str):
     return restaurant_service.answer_question(question)
+
+@router.get("/config")
+def config():
+    return restaurant_service.get_config()

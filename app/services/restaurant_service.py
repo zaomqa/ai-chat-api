@@ -1,14 +1,14 @@
 # restaurant_service.py
-from restaurant_data import restaurant_info
+import restaurant_data as data
 
 
 
 def get_restaurant():
-        return restaurant_info
+        return data.restaurant_info
 
 def get_menu(item : str | None = None):
     if item is not None:
-        price = restaurant_info["menu"].get(item)
+        price = data.menu.get(item)
         if price is not None:
             return {
                 "item": item,
@@ -19,23 +19,23 @@ def get_menu(item : str | None = None):
                 "error": "404 Not Found",
                 "message": f"Item '{item}' not found in the menu."
             }
-    return restaurant_info["menu"]
+    return data.menu
 
 def get_hours():
     return {
-        "hours": restaurant_info["hours"]
+        "hours": data.hours
     }
 
 
 def get_location():
     return {
-        "location": restaurant_info["location"]
+        "location": data.location
     }
        
 
 def search_menu(item : str):
-     price = restaurant_info["menu"].get(item)
-     if item in restaurant_info["menu"]:
+     price = data.menu.get(item)
+     if item in data.menu:
          return {
              "item": item,
              "price": price
@@ -47,7 +47,7 @@ def search_menu(item : str):
 
 def get_phone():
      return {
-          "phone": restaurant_info["phone"]
+          "phone": data.phone
      }
 
 def answer_question(question: str):
@@ -68,3 +68,10 @@ def answer_question(question: str):
         return {
             "message": "i dont know the answer to that question."
         }
+    
+def get_config():
+    return {
+        "phone": data.phone,
+        "hours": data.hours,
+        "location": data.location
+    }
