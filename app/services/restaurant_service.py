@@ -1,5 +1,6 @@
 # restaurant_service.py
 import restaurant_data as data
+import services.ai_service as ai_service
 
 
 
@@ -51,24 +52,9 @@ def get_phone():
      }
 
 def answer_question(question: str):
-    question_lower = question.lower()
-    if "hours" in question_lower:
-        return get_hours()
-    elif "location" in question_lower:
-        return get_location()
-    elif "phone" in question_lower:
-        return get_phone()
-    elif "menu" in question_lower:
-        item = question_lower.replace("menu", "").strip()
-        if item:
-            return search_menu(item)
-        else:
-            return get_menu()
-    else:
-        return {
-            "message": "i dont know the answer to that question."
-        }
+     return ai_service.generate_response(question)
     
+   
 def get_config():
     return {
         "phone": data.phone,

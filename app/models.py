@@ -14,3 +14,6 @@ class Person(BaseModel):
 
 class Message(BaseModel):
     message: str
+
+class Question(BaseModel):
+    question: str

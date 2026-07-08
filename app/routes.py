@@ -1,6 +1,7 @@
 #routes.py
 from fastapi import APIRouter
-from models import Rectangle, Numbers, Person, Message
+import services.ai_service as ai_service
+import models 
 import services.restaurant_service as restaurant_service
 
 
@@ -80,14 +81,14 @@ def read_profile(name: str, age: int | None = None):
 
 
 @router.post("/echo")
-def create_message(msg: Message):
+def create_message(msg: models.Message):
     return {
         "message": msg.message
     }
 
 
 @router.post("/person")
-def create_person(person: Person):
+def create_person(person: models.Person):
     return {
         "message" : f"Hello {person.name}, you are {person.age} years old."
     }
@@ -95,7 +96,7 @@ def create_person(person: Person):
 
 
 @router.post("/multiply")
-def create_multiply(numbers: Numbers):
+def create_multiply(numbers: models.Numbers):
     return {
         "result": numbers.num1 * numbers.num2
     }
@@ -103,7 +104,7 @@ def create_multiply(numbers: Numbers):
 
 
 @router.post("/rectangle/area")
-def calculate_rectangle_area(rectangle: Rectangle):
+def calculate_rectangle_area(rectangle: models.Rectangle):
     return {
         "area": rectangle.length * rectangle.width
     }
@@ -138,10 +139,12 @@ def search_menu_item(item: str):
 def read_restaurant_phone():
     return restaurant_service.get_phone()
 
-@router.get("/ask")
-def answer_question(question: str):
-    return restaurant_service.answer_question(question)
+# post
+@router.post("/ask")
+def answer_question(question: models.Question):
+    return {"message": ai_service.generate_response(question.question)}
 
 @router.get("/config")
 def config():
     return restaurant_service.get_config()
+
