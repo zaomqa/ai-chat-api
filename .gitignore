@@ -2,3 +2,4 @@
 .env
 
 # ignore changelog
+CHANGELOG.md
