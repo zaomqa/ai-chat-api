@@ -1,13 +1,32 @@
 # ai_service
 from openai import OpenAI
 import config as cfg
-import restaurant_data as info
+from services.prompts import SYSTEM_PROMPTS
+
+
+client = OpenAI(
+    base_url= "https://openrouter.ai/api/v1" ,
+    api_key = cfg.ai_api_key_config 
+)
 
 
 
-    
+restaurant_context = f"""
+Restaurant name:
+{cfg.name_config}
 
+Location:
+{cfg.location_config}
 
+Phone:
+{cfg.phone_config}
+
+Hours:
+{cfg.hours_config}
+
+Menu:
+{cfg.menu_config}
+"""
 
 # post
 hours = {"opening","hours","open","close","closing"}
@@ -31,23 +50,12 @@ pizza = {"pizzas","pizza"}
 
 def generate_response(question: str):
     try:
-        response = cfg.client.chat.completions.create(
+        response = client.chat.completions.create(
         model="openai/gpt-oss-20b:free",  
         messages = [
             {"role": "system",
-            "content": f"""
-            You are the AI assistant for a restaurant.
-
-            Restaurant name: {info.name}
-            Location: {info.location}
-            Phone: {info.phone}
-            Hours: {info.hours}
-            Menu:{info.menu}
-
-            Only answer questions about this restaurant.
-            If you don't know the answer, say so.
-            """
-             },
+            "content": f"{SYSTEM_PROMPTS}\n\n{restaurant_context}"
+            },
             { "role" : "user" ,
             "content" : question 
             }
